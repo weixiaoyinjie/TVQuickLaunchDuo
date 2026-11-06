@@ -9,11 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
 
     steps:
-      - name: Checkout Source
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java 17
@@ -27,23 +28,22 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Install Android SDK Packages
+      - name: Install Android SDK
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
             "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Extract Source ZIP
+      - name: Extract Source
         run: |
-          unzip -q TVQuickLaunch_Duo_v1_Source.zip
-          test -f TVQuickLaunch_Duo_v1_Source/settings.gradle
+          unzip -oq TVQuickLaunchDuo_v1.1_SSLFix_Source.zip
 
       - name: Build Debug APK
         working-directory: TVQuickLaunch_Duo_v1_Source
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 
-      - name: Upload Debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: TVQuickLaunchDuo-debug-apk
+          name: TVQuickLaunchDuo-v1.1
           path: TVQuickLaunch_Duo_v1_Source/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
